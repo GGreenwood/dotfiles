@@ -1,5 +1,10 @@
 #! /bin/sh
 
+sxhkd &
+xmodmap ~/.Xmodmap
+
+feh --randomize --bg-fill ~/.wallpaper/*
+
 bspc config border_width        2
 bspc config window_gap         12
 
@@ -8,8 +13,12 @@ bspc config borderless_monocle  true
 bspc config gapless_monocle     true
 bspc config focus_by_distance   true
 
-bspc monitor DFP7 -d 1 2 3 4
-bspc monitor DFP6 -d 5 6 7 8
+DISPLAYS=`xrandr --listactivemonitors | awk '{if(NF >= 4) print $4}'`
+
+if [ "`echo $DISPLAYS | wc -w`" -eq "2" ]; then
+	bspc monitor `echo $DISPLAYS | awk '{print $1}'` -d 1 2 3 4
+	bspc monitor `echo $DISPLAYS | awk '{print $2}'` -d 5 6 7 8
+fi
 
 bspc rule -a Gimp follow=on floating=on
 bspc rule -a java follow=on floating=on
